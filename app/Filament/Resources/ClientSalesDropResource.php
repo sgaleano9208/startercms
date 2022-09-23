@@ -90,7 +90,9 @@ class ClientSalesDropResource extends Resource
                                     ->options(Family::pluck('name', 'id'))
                                     ->label('Product family on drop'),
                                 MultiSelect::make('productVariations')
-                                    ->options(ProductVariation::where('status', 'active')->pluck('name', 'id'))
+                                ->relationship('productVariations', 'name')
+                                // MultiSelect::make('productVariations')
+                                //     ->options(ProductVariation::where('status', 'active')->pluck('name', 'id'))
                                     /* ->saveRelationshipsUsing(function (array $state, ClientSalesDropDetail $record) {
 
                                         if ($record->productVariations()->exists()) {
