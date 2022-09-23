@@ -26,8 +26,8 @@ class ClientSalesDrop extends Model
         return $this->belongsTo(Client::class);
     }
 
-    public function clientSalesDropDetails()
+    public function clientSalesDropDetail()
     {
-        return $this->hasMany(ClientSalesDropDetail::class);
+        return $this->hasOne(ClientSalesDropDetail::class);
     }
 }
