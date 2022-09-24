@@ -5,6 +5,7 @@ namespace App\Filament\Resources;
 use Filament\Forms;
 use Filament\Tables;
 use App\Models\Family;
+use Livewire\Livewire;
 use App\Models\Competitor;
 use App\Models\DropReason;
 use Filament\Resources\Form;
@@ -13,7 +14,6 @@ use App\Models\ClientSalesDrop;
 use App\Models\ProductVariation;
 use Filament\Resources\Resource;
 use App\Models\ClientSalesDropDetail;
-use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Fieldset;
 use Filament\Forms\Components\Repeater;
@@ -21,16 +21,12 @@ use Filament\Tables\Columns\TextColumn;
 use Illuminate\Database\Eloquent\Model;
 use Filament\Forms\Components\TextInput;
 use Filament\Notifications\Notification;
-use Filament\Forms\Components\DatePicker;
 use Illuminate\Database\Eloquent\Builder;
 use Filament\Forms\Components\MultiSelect;
-use Illuminate\Database\Eloquent\Collection;
-use Filament\Forms\Components\MarkdownEditor;
+use Filament\Tables\Columns\BooleanColumn;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Filament\Resources\ClientSalesDropResource\Pages;
 use App\Filament\Resources\ClientSalesDropResource\RelationManagers;
-use Closure;
-use Filament\Tables\Columns\BooleanColumn;
 
 class ClientSalesDropResource extends Resource
 {
@@ -55,95 +51,66 @@ class ClientSalesDropResource extends Resource
 
             ])
             ->filters([
+
                 //
             ])
             ->actions([
-                Tables\Actions\Action::make('create')
-                    ->action(function (ClientSalesDropDetail $clientSalesDropDetail, array $data) {
-                        $clientSalesDropDetail->create($data);
+                /* Tables\Actions\Action::make('create')
+                    ->action(function (ClientSalesDrop $record, ClientSalesDropDetail $clientSalesDropDetail, array $data) {
+                            $data['client_sales_drop_id'] = $record->id;
+                            $clientSalesDropDetail->create($data);
+                            $record->clientSalesDropDetail->productVariations()->attach($data['productVariations']);
 
-                        Notification::make()
-                            ->title('Report created successfully')
-                            ->success()
-                            ->send();
-                    })->hidden(fn (Model $record) => (!$record->_reported) ? false : true)
+                            $record->update([$record->_reported = true]);
+                    })
                     ->form([
                         Fieldset::make('Drop details')
                             ->schema([
-                                Hidden::make('client_sales_drop_id')
-                                    ->default(fn (Model $record): string => $record->id),
                                 Select::make('drop_reason_id')
-                                    ->options(DropReason::all()->pluck('name', 'id'))
+                                    ->options(DropReason::pluck('name', 'id'))
+                                    ->searchable()
+                                    ->preload()
                                     ->label('Drop reason'),
                                 Select::make('competitor_id')
-                                    ->options(Competitor::all()->pluck('name', 'id'))
+                                    ->options(Competitor::pluck('name', 'id'))
                                     ->label('Losted to'),
                                 Select::make('family_id')
-                                    ->options(Family::all()->pluck('name', 'id'))
+                                    ->options(Family::pluck('name', 'id'))
                                     ->label('Product family on drop'),
                                 MultiSelect::make('productVariations')
-                                    ->options(ProductVariation::where('status', 'active')->pluck('name', 'id')),
+                                    ->options(ProductVariation::where('status', 'active')->pluck('name', 'id'))
                             ]),
-                        Repeater::make('comments')
-                            ->schema([
-                                DatePicker::make('commented_at')
-                                    ->label('Comment date') 
-                                    ->displayFormat('d/m/Y')
-                                    ->default(now())
-                                    ->disabled(),
-                                MarkdownEditor::make('comment_body')
-                                    ->label('Comment')
-                            ])
                     ]),
-                Tables\Actions\Action::make('edit')
-                    ->mountUsing(function (Forms\ComponentContainer $form, ClientSalesDropDetail $clientSalesDropDetail, Model $record) {
-
-                        $data = ClientSalesDropDetail::all()->where('client_sales_drop_id', $record->id);
-
-
-                        $form->fill([
-                        'drop_reason_id' => $data->pluck('drop_reason_id'),
-                        'competitor_id' => $data->pluck('competitor_id'),
-                        'family_id' => $data->pluck('family_id'),
-                    ]);
-
-                })
-                    ->action(function (ClientSalesDropDetail $clientSalesDropDetail, array $data) {
-                        $clientSalesDropDetail->create($data);
-
-                        Notification::make()
-                            ->title('Report created successfully')
-                            ->success()
-                            ->send();
-                    })->hidden(fn (Model $record) => (!$record->_reported) ? true : false)
-                    ->form([
-                        Fieldset::make('Drop details')
-                            ->schema([
-                                Hidden::make('client_sales_drop_id')
-                                    ->default(fn (Model $record): string => $record->id),
-                                Select::make('drop_reason_id')
-                                    ->options(DropReason::all()->pluck('name', 'id'))
-                                    ->label('Drop reason'),
-                                Select::make('competitor_id')
-                                    ->options(Competitor::all()->pluck('name', 'id'))
-                                    ->label('Losted to'),
-                                Select::make('family_id')
-                                    ->options(Family::all()->pluck('name', 'id'))
-                                    ->label('Product family on drop'),
-                                MultiSelect::make('productVariations')
-                                    ->options(ProductVariation::where('status', 'active')->pluck('name', 'id')),
-                            ]),
-                        Repeater::make('comments')
-                            ->schema([
-                                DatePicker::make('commented_at')
-                                    ->label('Comment date')
-                                    ->displayFormat('d/m/Y')
-                                    ->default(now())
-                                    ->disabled(),
-                                MarkdownEditor::make('comment_body')
-                                    ->label('Comment')
-                            ])
-                    ]),
+ */
+                    /* THIS IS THE EDIT CODE THAT CREATES AND EDIT THE CHILD RECORD AND ITS RELATIONSHIPS
+                    THE THING IS THAT ON CREATE I WONT ATTACH IT'S RELATIONSHIP M:M WITH 'productVariations'. IT ILL EDIT THEM THOUGH */
+                Tables\Actions\EditAction::make()
+                ->icon('heroicon-s-pencil')
+                ->form([
+                    Fieldset::make('Drop details')
+                        ->relationship('clientSalesDropDetail')
+                        ->schema([
+                            Select::make('drop_reason_id')
+                                ->relationship('dropReason', 'name')
+                                ->searchable()
+                                ->preload()
+                                ->placeholder('Select a reason')
+                                ->label('Drop reason'),
+                            Select::make('competitor_id')
+                                ->relationship('competitor', 'name')
+                                ->searchable()
+                                ->preload()
+                                ->label('Losted to'),
+                            Select::make('family_id')
+                                ->relationship('family', 'name')
+                                ->searchable()
+                                ->preload()
+                                ->label('Product family on drop'),
+                            MultiSelect::make('productVariations')
+                                ->relationship('productVariations', 'name')
+                                ->preload()
+                        ]),
+                ]),
                 Tables\Actions\Action::make('view')
                     ->action('')
                     ->modalContent(view('livewire.sales-drop-detail-comments')),
