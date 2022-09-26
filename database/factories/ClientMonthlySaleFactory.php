@@ -2,18 +2,18 @@
 
 namespace Database\Factories;
 
-use App\Models\Cooperative;
 use Illuminate\Support\Str;
+use App\Models\ClientMonthlySale;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
-class CooperativeFactory extends Factory
+class ClientMonthlySaleFactory extends Factory
 {
     /**
      * The name of the factory's corresponding model.
      *
      * @var string
      */
-    protected $model = Cooperative::class;
+    protected $model = ClientMonthlySale::class;
 
     /**
      * Define the model's default state.
@@ -23,9 +23,9 @@ class CooperativeFactory extends Factory
     public function definition()
     {
         return [
-            'name' => $this->faker->name,
-            'rapel' => $this->faker->text(255),
-            'cod' => $this->faker->text(7),
+            'date' => $this->faker->date,
+            'client_no_nav' => \App\Models\Client::factory(),
+            'cooperative_cod' => \App\Models\Cooperative::factory(),
         ];
     }
 }

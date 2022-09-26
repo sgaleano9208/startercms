@@ -15,6 +15,8 @@ class Competitor extends Model
 
     protected $searchableFields = ['*'];
 
+    public $timestamps = false;
+
     public function clientSalesDropDetails()
     {
         return $this->hasMany(ClientSalesDropDetail::class);

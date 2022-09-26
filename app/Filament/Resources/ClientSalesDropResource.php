@@ -55,10 +55,11 @@ class ClientSalesDropResource extends Resource
                 //
             ])
             ->actions([
-                /* Tables\Actions\Action::make('create')
+                Tables\Actions\Action::make('create')
                     ->action(function (ClientSalesDrop $record, ClientSalesDropDetail $clientSalesDropDetail, array $data) {
                             $data['client_sales_drop_id'] = $record->id;
                             $clientSalesDropDetail->create($data);
+
                             $record->clientSalesDropDetail->productVariations()->attach($data['productVariations']);
 
                             $record->update([$record->_reported = true]);
@@ -67,21 +68,25 @@ class ClientSalesDropResource extends Resource
                         Fieldset::make('Drop details')
                             ->schema([
                                 Select::make('drop_reason_id')
-                                    ->options(DropReason::pluck('name', 'id'))
+                                    ->options(DropReason::with('id')->pluck('name', 'id'))
                                     ->searchable()
                                     ->preload()
                                     ->label('Drop reason'),
                                 Select::make('competitor_id')
                                     ->options(Competitor::pluck('name', 'id'))
+                                    ->searchable()
+                                    ->preload()
                                     ->label('Losted to'),
                                 Select::make('family_id')
                                     ->options(Family::pluck('name', 'id'))
+                                    ->searchable()
+                                    ->preload()
                                     ->label('Product family on drop'),
                                 MultiSelect::make('productVariations')
                                     ->options(ProductVariation::where('status', 'active')->pluck('name', 'id'))
                             ]),
-                    ]),
- */
+                    ])->hidden(fn(ClientSalesDrop $record) => ($record->_reported != true)? false : true),
+
                     /* THIS IS THE EDIT CODE THAT CREATES AND EDIT THE CHILD RECORD AND ITS RELATIONSHIPS
                     THE THING IS THAT ON CREATE I WONT ATTACH IT'S RELATIONSHIP M:M WITH 'productVariations'. IT ILL EDIT THEM THOUGH */
                 Tables\Actions\EditAction::make()
@@ -110,7 +115,7 @@ class ClientSalesDropResource extends Resource
                                 ->relationship('productVariations', 'name')
                                 ->preload()
                         ]),
-                ]),
+                ])->hidden(fn(ClientSalesDrop $record) => ($record->_reported != true) ? true : false),
                 Tables\Actions\Action::make('view')
                     ->action('')
                     ->modalContent(view('livewire.sales-drop-detail-comments')),

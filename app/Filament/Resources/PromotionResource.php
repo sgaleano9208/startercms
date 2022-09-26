@@ -18,6 +18,7 @@ use Filament\Forms\Components\Toggle;
 use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Textarea;
 use Filament\Tables\Columns\TextColumn;
+use Illuminate\Database\Eloquent\Model;
 use Filament\Forms\Components\TextInput;
 use Filament\Tables\Columns\BadgeColumn;
 use Filament\Forms\Components\DatePicker;
@@ -26,6 +27,7 @@ use App\Filament\Resources\PromotionResource\Pages;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use pxlrbt\FilamentExcel\Actions\Tables\ExportBulkAction;
 use App\Filament\Resources\PromotionResource\RelationManagers;
+use App\Models\Proposal;
 
 class PromotionResource extends Resource
 {
@@ -39,60 +41,71 @@ class PromotionResource extends Resource
         return $form
             ->schema([
                 Card::make()
-                ->schema([
-                    TextInput::make('name')
-                    ->required(),
-                    Select::make('client_id')
-                    ->options(fn() => Client::all()->where('status', 'active')->pluck('name', 'id'))
-                    ->required()
-                    ->preload()
-                    ->label('Client')
-                    ->searchable(),
-                    DatePicker::make('start_date')
-                    ->displayFormat('d/m/Y')
-                    ->default(now()),
-                    DatePicker::make('end_date')
-                    ->minDate(fn(callable $get) => $get('start_date')),
-                    DatePicker::make('first_order_date')
-                    ->displayFormat('d/m/Y'),
-                    Radio::make('status')
-                    ->options([
-                        'active' => 'Active',
-                        'inactive' => 'Inactive',
-                    ])
-                    ->default('active'),
-                    Textarea::make('observation')
-                    ->columnSpan('full'),
-                ])
-                ->columns(2),
-                Card::make()
-                ->schema([
-                    Repeater::make('promotionItems')
-                    ->relationship('promotionItems')
                     ->schema([
-                        Select::make('product_variation_id')
-                        ->options(fn() => ProductVariation::all()->where('status', 'active')->pluck('name', 'id'))
-                        ->required()
-                        ->label('Product'),
-                        TextInput::make('name'),
-                        TextInput::make('promo_price')
-                        ->numeric(),
-                        TextInput::make('discount')
-                        ->numeric(),
-                        TextInput::make('price')
-                        ->numeric(),
-                        TextInput::make('current_sales')
-                        ->numeric(),
-                        TextInput::make('past_sales')
-                        ->numeric(),
-                        Toggle::make('is_selected')
+                        TextInput::make('name')
+                            ->required(),
+                        Select::make('client_id')
+                            ->options(fn () => Client::all()->where('status', 'active')->pluck('name', 'id'))
+                            ->required()
+                            ->preload()
+                            ->label('Client')
+                            ->searchable(),
+                        DatePicker::make('start_date')
+                            ->displayFormat('d/m/Y')
+                            ->default(now()),
+                        DatePicker::make('end_date')
+                            ->minDate(fn (callable $get) => $get('start_date')),
+                        DatePicker::make('first_order_date')
+                            ->displayFormat('d/m/Y'),
+                        Radio::make('status')
+                            ->options([
+                                'active' => 'Active',
+                                'inactive' => 'Inactive',
+                            ])
+                            ->default('active'),
+                        Textarea::make('observation')
+                            ->columnSpan('full'),
                     ])
-                    ->columns(8)
-                    ->createItemButtonLabel('Add new line')
-                    ->defaultItems(0)
-                    ->collapsible()
-                    ->itemLabel(fn (array $state): ?string => $state['name'] ?? null),
-                ])
+                    ->columns(2),
+                Card::make()
+                    ->schema([
+                        Repeater::make('promotionItems')
+                            ->relationship('promotionItems')
+                            ->schema([
+                                Select::make('product_variation_id')
+                                    ->options(fn () => ProductVariation::all()->where('status', 'active')->pluck('name', 'id'))
+                                    ->required()
+                                    ->reactive()
+                                    ->afterStateUpdated(function(callable $set, $state) {
+                                        $product = ProductVariation::find($state);
+                                        if($product){
+                                        $set('name', $product->name);
+                                        $set('price', $product->price);
+                                        }
+                                    })
+                                    ->searchable()
+                                    ->preload()
+                                    ->label('Product'),
+                                TextInput::make('name'),
+                                TextInput::make('promo_price')
+                                    ->numeric(),
+                                TextInput::make('discount')
+                                    ->numeric(),
+                                TextInput::make('price')
+                                    ->numeric(),
+                                TextInput::make('current_sales')
+                                    ->numeric(),
+                                TextInput::make('past_sales')
+                                    ->numeric(),
+                                Toggle::make('is_selected')
+                            ])
+                            ->columns(8)
+                            ->createItemButtonLabel('Add new line')
+                            ->defaultItems(0)
+                            ->cloneable()
+                            ->collapsible()
+                            ->itemLabel(fn (array $state): ?string => $state['name'] ?? null),
+                    ])
             ]);
     }
 
@@ -101,29 +114,29 @@ class PromotionResource extends Resource
         return $table
             ->columns([
                 TextColumn::make('name')
-                ->searchable()
-                ->sortable(),
+                    ->searchable()
+                    ->sortable(),
                 TextColumn::make('start_date')
-                ->searchable()
-                ->sortable()
-                ->date('d/m/Y'),
+                    ->searchable()
+                    ->sortable()
+                    ->date('d/m/Y'),
                 TextColumn::make('end_date')
-                ->searchable()
-                ->sortable()
-                ->date('d/m/Y'),
+                    ->searchable()
+                    ->sortable()
+                    ->date('d/m/Y'),
                 BadgeColumn::make('status')
-                ->enum([
-                    'active' => 'Active',
-                    'inactive' => 'Inactive',
-                ])
-                ->colors([
-                    'success',
-                    'danger' => 'inactive'
-                ])
-                ->icons([
-                    'heroicon-s-check-circle',
-                    'heroicon-s-x-circle' => 'inactive'
-                ])
+                    ->enum([
+                        'active' => 'Active',
+                        'inactive' => 'Inactive',
+                    ])
+                    ->colors([
+                        'success',
+                        'danger' => 'inactive'
+                    ])
+                    ->icons([
+                        'heroicon-s-check-circle',
+                        'heroicon-s-x-circle' => 'inactive'
+                    ])
 
             ])
             ->filters([
@@ -131,6 +144,15 @@ class PromotionResource extends Resource
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
+                Tables\Actions\ReplicateAction::make()
+                    ->action(function(Promotion $record, array $data){
+                        $replica = $record->duplicate();
+                        $replica->fill($data);
+                        $replica->save();
+                    })
+                    ->form([
+                        TextInput::make('name')->required(),
+                    ])
             ])
             ->bulkActions([
                 Tables\Actions\DeleteBulkAction::make(),

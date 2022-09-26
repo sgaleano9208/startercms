@@ -12,11 +12,11 @@ return new class extends Migration {
      */
     public function up()
     {
-        Schema::create('cooperatives', function (Blueprint $table) {
+        Schema::create('client_monthly_sales', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('name');
-            $table->string('rapel')->nullable();
-            $table->string('cod', 7);
+            $table->unsignedBigInteger('client_no_nav');
+            $table->date('date');
+            $table->unsignedBigInteger('cooperative_cod');
 
             $table->timestamps();
         });
@@ -29,6 +29,6 @@ return new class extends Migration {
      */
     public function down()
     {
-        Schema::dropIfExists('cooperatives');
+        Schema::dropIfExists('client_monthly_sales');
     }
 };

@@ -69,6 +69,15 @@ class Client extends Model
         return $this->hasMany(Promotion::class);
     }
 
+    public function clientMonthlySales()
+    {
+        return $this->hasMany(
+            ClientMonthlySale::class,
+            'client_no_nav',
+            'no_nav'
+        );
+    }
+
     public function clientSalesDrops()
     {
         return $this->hasMany(ClientSalesDrop::class);

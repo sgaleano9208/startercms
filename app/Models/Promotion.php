@@ -10,6 +10,7 @@ class Promotion extends Model
 {
     use HasFactory;
     use Searchable;
+    use \Bkwld\Cloner\Cloneable;
 
     protected $fillable = [
         'name',
@@ -28,6 +29,8 @@ class Promotion extends Model
         'end_date' => 'date',
         'first_order_date' => 'date',
     ];
+
+    protected $cloneable_relations = ['promotionItems'];
 
     public function client()
     {

@@ -11,7 +11,7 @@ class ClientSalesDrop extends Model
     use HasFactory;
     use Searchable;
 
-    protected $fillable = ['client_id', '_reported'];
+    protected $fillable = ['_reported', 'client_id'];
 
     protected $searchableFields = ['*'];
 

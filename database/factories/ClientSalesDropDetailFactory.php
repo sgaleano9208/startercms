@@ -25,11 +25,11 @@ class ClientSalesDropDetailFactory extends Factory
         return [
             'status' => 'pending',
             'comments' => [],
-            'client_sales_drop_id' => \App\Models\ClientSalesDrop::factory(),
             'drop_reason_id' => \App\Models\DropReason::factory(),
             'competitor_id' => \App\Models\Competitor::factory(),
             'user_id' => \App\Models\User::factory(),
             'family_id' => \App\Models\Family::factory(),
+            'client_sales_drop_id' => \App\Models\ClientSalesDrop::factory(),
         ];
     }
 }

@@ -3,6 +3,10 @@
 namespace Database\Factories;
 
 use App\Models\Client;
+use App\Models\Country;
+use App\Models\SalesPerson;
+use App\Models\State;
+use App\Models\Typology;
 use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -22,6 +26,7 @@ class ClientFactory extends Factory
      */
     public function definition()
     {
+
         return [
             'name' => $this->faker->name,
             'phone' => $this->faker->unique->phoneNumber,
@@ -32,10 +37,10 @@ class ClientFactory extends Factory
             'observation' => $this->faker->sentence(15),
             'type' => 'member',
             'status' => 'active',
-            'country_id' => \App\Models\Country::factory(),
-            'state_id' => \App\Models\State::factory(),
-            'typology_id' => \App\Models\Typology::factory(),
-            'sales_person_id' => \App\Models\SalesPerson::factory(),
+            'country_id' => Country::inRandomOrder()->first(),
+            'state_id' => State::inRandomOrder()->first(),
+            'typology_id' => Typology::inRandomOrder()->first(),
+            'sales_person_id' => SalesPerson::inRandomOrder()->first(),
         ];
     }
 }

@@ -29,11 +29,6 @@ class ClientSalesDropDetail extends Model
         'comments' => 'array',
     ];
 
-    public function clientSalesDrop()
-    {
-        return $this->belongsTo(ClientSalesDrop::class);
-    }
-
     public function dropReason()
     {
         return $this->belongsTo(DropReason::class);
@@ -52,6 +47,11 @@ class ClientSalesDropDetail extends Model
     public function family()
     {
         return $this->belongsTo(Family::class);
+    }
+
+    public function clientSalesDrop()
+    {
+        return $this->belongsTo(ClientSalesDrop::class);
     }
 
     public function productVariations()

@@ -11,13 +11,22 @@ class Cooperative extends Model
     use HasFactory;
     use Searchable;
 
-    protected $fillable = ['name', 'rapel'];
+    protected $fillable = ['name', 'rapel', 'cod'];
 
     protected $searchableFields = ['*'];
 
     public function clientCooperativeHistories()
     {
         return $this->hasMany(ClientCooperativeHistory::class);
+    }
+
+    public function clientMonthlySales()
+    {
+        return $this->hasMany(
+            ClientMonthlySale::class,
+            'cooperative_cod',
+            'cod'
+        );
     }
 
     public function clients()

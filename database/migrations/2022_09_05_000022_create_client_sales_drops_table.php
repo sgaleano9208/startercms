@@ -14,8 +14,8 @@ return new class extends Migration {
     {
         Schema::create('client_sales_drops', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->unsignedBigInteger('client_id');
             $table->boolean('_reported')->default(false);
+            $table->unsignedBigInteger('client_id');
 
             $table->timestamps();
         });

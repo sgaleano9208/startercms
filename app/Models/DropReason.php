@@ -17,6 +17,8 @@ class DropReason extends Model
 
     protected $table = 'drop_reasons';
 
+    public $timestamps = false;
+
     public function clientSalesDropDetails()
     {
         return $this->hasMany(ClientSalesDropDetail::class);
