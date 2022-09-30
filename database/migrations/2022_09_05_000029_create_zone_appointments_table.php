@@ -12,12 +12,12 @@ return new class extends Migration {
      */
     public function up()
     {
-        Schema::create('client_monthly_sales', function (Blueprint $table) {
+        Schema::create('zone_appointments', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->unsignedBigInteger('client_id');
-            $table->unsignedBigInteger('cooperative_id');
-            $table->date('date');
-            $table->decimal('sales');
+            $table->unsignedBigInteger('sales_person_id');
+            $table->date('start_date');
+            $table->date('end_date');
+            $table->enum('status', ['pending', 'done']);
 
             $table->timestamps();
         });
@@ -30,6 +30,6 @@ return new class extends Migration {
      */
     public function down()
     {
-        Schema::dropIfExists('client_monthly_sales');
+        Schema::dropIfExists('zone_appointments');
     }
 };

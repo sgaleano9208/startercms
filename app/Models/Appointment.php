@@ -6,41 +6,37 @@ use App\Models\Scopes\Searchable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
-class Proposal extends Model
+class Appointment extends Model
 {
     use HasFactory;
     use Searchable;
 
     protected $fillable = [
-        'name',
-        'number',
+        'zone_appointment_id',
         'client_id',
         'date',
-        'end_date',
-        'type_of_payment_id',
+        'time',
+        'goals',
+        'attachments',
+        'details',
         'status',
-        'observation',
     ];
 
     protected $searchableFields = ['*'];
 
     protected $casts = [
         'date' => 'date',
-        'end_date' => 'date',
+        'time' => 'datetime',
+        'goals' => 'array',
     ];
 
-    public function typeOfPayment()
+    public function zoneAppointment()
     {
-        return $this->belongsTo(TypeOfPayment::class);
+        return $this->belongsTo(ZoneAppointment::class);
     }
 
     public function client()
     {
         return $this->belongsTo(Client::class);
-    }
-
-    public function proposalItems()
-    {
-        return $this->hasMany(ProposalItem::class);
     }
 }

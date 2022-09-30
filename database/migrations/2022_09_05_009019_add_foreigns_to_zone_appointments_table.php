@@ -12,18 +12,11 @@ return new class extends Migration {
      */
     public function up()
     {
-        Schema::table('client_monthly_sales', function (Blueprint $table) {
+        Schema::table('zone_appointments', function (Blueprint $table) {
             $table
-                ->foreign('client_id')
+                ->foreign('sales_person_id')
                 ->references('id')
-                ->on('clients')
-                ->onUpdate('CASCADE')
-                ->onDelete('CASCADE');
-
-            $table
-                ->foreign('cooperative_id')
-                ->references('id')
-                ->on('cooperatives')
+                ->on('sales_people')
                 ->onUpdate('CASCADE')
                 ->onDelete('CASCADE');
         });
@@ -36,9 +29,8 @@ return new class extends Migration {
      */
     public function down()
     {
-        Schema::table('client_monthly_sales', function (Blueprint $table) {
-            $table->dropForeign(['client_id']);
-            $table->dropForeign(['cooperative_id']);
+        Schema::table('zone_appointments', function (Blueprint $table) {
+            $table->dropForeign(['sales_person_id']);
         });
     }
 };

@@ -11,7 +11,7 @@ class ClientMonthlySale extends Model
     use HasFactory;
     use Searchable;
 
-    protected $fillable = ['client_no_nav', 'date', 'cooperative_cod'];
+    protected $fillable = ['client_id', 'cooperative_id', 'date', 'sales'];
 
     protected $searchableFields = ['*'];
 
@@ -23,11 +23,11 @@ class ClientMonthlySale extends Model
 
     public function client()
     {
-        return $this->belongsTo(Client::class, 'client_no_nav', 'no_nav');
+        return $this->belongsTo(Client::class);
     }
 
     public function cooperative()
     {
-        return $this->belongsTo(Cooperative::class, 'cooperative_cod', 'cod');
+        return $this->belongsTo(Cooperative::class);
     }
 }

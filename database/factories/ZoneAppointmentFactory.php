@@ -3,17 +3,17 @@
 namespace Database\Factories;
 
 use Illuminate\Support\Str;
-use App\Models\ClientMonthlySale;
+use App\Models\ZoneAppointment;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
-class ClientMonthlySaleFactory extends Factory
+class ZoneAppointmentFactory extends Factory
 {
     /**
      * The name of the factory's corresponding model.
      *
      * @var string
      */
-    protected $model = ClientMonthlySale::class;
+    protected $model = ZoneAppointment::class;
 
     /**
      * Define the model's default state.
@@ -23,10 +23,10 @@ class ClientMonthlySaleFactory extends Factory
     public function definition()
     {
         return [
-            'date' => $this->faker->date,
-            'sales' => $this->faker->randomNumber(1),
-            'client_id' => \App\Models\Client::factory(),
-            'cooperative_id' => \App\Models\Cooperative::factory(),
+            'start_date' => $this->faker->date,
+            'end_date' => $this->faker->date,
+            'status' => 'pending',
+            'sales_person_id' => \App\Models\SalesPerson::factory(),
         ];
     }
 }
