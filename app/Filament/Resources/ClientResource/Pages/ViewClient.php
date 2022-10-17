@@ -9,7 +9,7 @@ use Filament\Resources\Pages\ViewRecord;
 class ViewClient extends ViewRecord
 {
 
-    protected static string $view = 'app/client/show';
+    protected static string $view = 'app.client.show';
 
     protected static string $resource = ClientResource::class;
 

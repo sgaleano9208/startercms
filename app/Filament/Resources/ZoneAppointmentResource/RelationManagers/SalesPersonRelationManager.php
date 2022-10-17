@@ -2,28 +2,23 @@
 
 namespace App\Filament\Resources\ZoneAppointmentResource\RelationManagers;
 
-use App\Models\Appointment;
-use Filament\Forms;
+use App\Filament\Resources\ClientResource;
 use Filament\Tables;
 use App\Models\Client;
-use Filament\Forms\Components\DatePicker;
-use Filament\Forms\Components\Fieldset;
-use Filament\Forms\Components\FileUpload;
-use Filament\Forms\Components\Radio;
-use Filament\Forms\Components\Select;
-use Filament\Forms\Components\Textarea;
-use Filament\Forms\Components\TextInput;
-use Filament\Forms\Components\TimePicker;
 use Filament\Resources\Form;
 use Filament\Resources\Table;
-use Illuminate\Database\Eloquent\Model;
+use Filament\Forms\Components\Radio;
+use Filament\Forms\Components\Textarea;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Forms\Components\DatePicker;
+use Filament\Forms\Components\TimePicker;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Filament\Resources\RelationManagers\RelationManager;
-use Filament\Tables\Columns\TextColumn;
 
-class ClientsRelationManager extends RelationManager
+class SalesPersonRelationManager extends RelationManager
 {
+
     protected static string $relationship = 'salesPerson';
 
     protected static ?string $recordTitleAttribute = 'name';
@@ -38,8 +33,7 @@ class ClientsRelationManager extends RelationManager
         return $form
             ->schema([
 
-                TextInput::make('test')
-                ->default('pedro')
+                //
 
             ]);
     }
@@ -51,6 +45,7 @@ class ClientsRelationManager extends RelationManager
                 TextColumn::make('name')
             ])
             ->filters([
+
                 //
             ])
             ->headerActions([
@@ -58,32 +53,50 @@ class ClientsRelationManager extends RelationManager
             ])
             ->actions([
                 Tables\Actions\Action::make('create')
-                    ->action(function (Client $record, Appointment $appointment, array $data, $livewire) {
+                    ->action(function ($record, array $data, $livewire) {
 
                         $data['client_id'] = $record->id;
                         $data['zone_appointment_id'] = $livewire->ownerRecord->id;
 
-                        // dd($appointment);
+                        // dd($record->appointments());
 
-                        $appointment->create($data);
+                        $record->appointments()->create($data);
                     })
                     ->form([
                         DatePicker::make('date')
-                            ->displayFormat('d/m/Y'),
-                        TimePicker::make('time'),
-                        FileUpload::make('attachments')
-                            ->multiple(),
+                            ->displayFormat('d/m/Y')
+                            ->closeOnDateSelection(),
+                        TimePicker::make('time')
+                        ->withoutSeconds(),
+                        // FileUpload::make('attachments')
+                        //     ->multiple(),
                         Textarea::make('details'),
                         Radio::make('status')
                             ->options([
                                 'pending' => 'Pending',
                                 'done' => 'Done'
                             ])->inline()
-                    ]),
-                Tables\Actions\ViewAction::make(),
+                    ])
+                    ->hidden(fn(Client $record):bool => $record->appointments()->exists()),
+
+                Tables\Actions\Action::make('viewStats')
+                ->icon('heroicon-o-eye')
+                ->color('gray')
+                ->label('Stats')
+                // ESTA ES LA SOLUCION PARA GUARDAR EN LA SESSION VALORES.... MUCHO VALOR!!!!
+                ->action(function(Client $record, $livewire) {
+
+                    session()->forget('zoneId');
+                    $zoneId = $livewire->ownerRecord->id;
+                    session()->put('zoneId', $zoneId);
+
+                    return redirect(route('filament.resources.clients.stats', ['record' => $record]));
+
+                }),
             ])
             ->bulkActions([
                 Tables\Actions\DeleteBulkAction::make(),
             ]);
     }
+
 }

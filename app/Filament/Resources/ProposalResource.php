@@ -3,6 +3,7 @@
 namespace App\Filament\Resources;
 
 use Filament\Tables;
+use App\Models\Client;
 use App\Models\Proposal;
 use Filament\Resources\Form;
 use Filament\Resources\Table;
@@ -20,7 +21,7 @@ use Filament\Forms\Components\DatePicker;
 use App\Filament\Resources\ProposalResource\Pages;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Filament\Resources\ProposalResource\RelationManagers;
-use App\Models\Client;
+use Icetalker\FilamentTableRepeater\Forms\Components\TableRepeater;
 
 class ProposalResource extends Resource
 
@@ -71,6 +72,53 @@ class ProposalResource extends Resource
                 ])->columns(2),
                 Card::make()
                 ->schema([
+
+                    /* TableRepeater::make('proposalItems')
+                    ->relationship('proposalItems')
+                    ->schema([
+                        Select::make('product_variation_id')
+                        ->options(ProductVariation::all()->where('status', 'active')->pluck('name', 'id'))
+                        ->searchable()
+                        ->label('Product')
+                        ->required()
+                        ->reactive()
+                        ->afterStateUpdated(function(callable $set, $state) {
+                            $product = ProductVariation::find($state);
+                            if($product){
+                            $set('name', $product->name);
+                            $set('price', $product->price);
+                            }
+                        }),
+                        TextInput::make('name'),
+                        TextInput::make('price')
+                        ->numeric()
+                        ->lazy()
+                        ->afterStateUpdated(function(callable $set, callable $get, $state){
+                            $netPrice = ($state * $get('quantity'));
+                            if($get('discount')){
+                            $netPrice = $state - ($state * ($get('discount') / 100));
+                            }
+                            $set('net_price', number_format($netPrice, 2, '.'));
+                        }),
+                        TextInput::make('discount')
+                        ->numeric()
+                        ->default(function(callable $get){
+                            $discount = Client::find($get('../../client_id'));
+                            return $discount->discount;
+                        }),
+                        TextInput::make('discount1')
+                        ->numeric(),
+                        TextInput::make('quantity')
+                        ->numeric()
+                        ->minValue(1)
+                        ->default(1),
+                        TextInput::make('net_price')
+                        ->numeric(),
+                    ])
+                    ->collapsible()
+                    ->defaultItems(3), */
+
+
                     Repeater::make('proposalItems')
                     ->relationship()
                     ->label('Proposal details')

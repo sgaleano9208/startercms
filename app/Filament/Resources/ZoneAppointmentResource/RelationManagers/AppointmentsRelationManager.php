@@ -30,7 +30,24 @@ class AppointmentsRelationManager extends RelationManager
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('client_id'),
+                Tables\Columns\TextColumn::make('client.name'),
+                Tables\Columns\TextColumn::make('date')
+                ->date('d/m/Y'),
+                Tables\Columns\TextColumn::make('time')
+                ->time('H:i'),
+                Tables\Columns\BadgeColumn::make('status')
+                ->enum([
+                    'pending' => 'Pending',
+                    'done' => 'Done'
+                ])
+                ->icons([
+                    'heroicon-s-x-circle',
+                    'heroicon-s-check' => 'done',
+                ])
+                ->colors([
+                    'warning',
+                    'success' => 'done'
+                ]),
             ])
             ->filters([
                 //
@@ -45,5 +62,5 @@ class AppointmentsRelationManager extends RelationManager
             ->bulkActions([
                 Tables\Actions\DeleteBulkAction::make(),
             ]);
-    }    
+    }
 }

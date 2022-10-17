@@ -243,6 +243,7 @@ class ClientResource extends Resource
             'create' => Pages\CreateClient::route('/create'),
             'view' => Pages\ViewClient::route('/{record}'),
             'edit' => Pages\EditClient::route('/{record}/edit'),
+            'stats' => Pages\StatsClient::route('/{record}/stats'),
         ];
     }
 }

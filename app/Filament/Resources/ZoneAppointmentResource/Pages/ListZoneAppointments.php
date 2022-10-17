@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\ZoneAppointmentResource\Pages;
 
 use App\Filament\Resources\ZoneAppointmentResource;
+use App\Models\ZoneAppointment;
 use Filament\Pages\Actions;
 use Filament\Resources\Pages\ListRecords;
 
@@ -14,6 +15,10 @@ class ListZoneAppointments extends ListRecords
     {
         return [
             Actions\CreateAction::make(),
+            Actions\Action::make('calendar')
+            ->label('View calendar')
+            ->icon('heroicon-o-calendar')
+            ->url(fn () => ZoneAppointmentResource::getUrl('calendar'))
         ];
     }
 

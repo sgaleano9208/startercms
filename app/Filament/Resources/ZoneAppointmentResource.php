@@ -104,7 +104,7 @@ class ZoneAppointmentResource extends Resource
                 //
             ])
             ->actions([
-                ViewAction::make()
+                ViewAction::make('view')
                 ->button()
                 ->color('success')
                 ->icon('heroicon-s-collection'),
@@ -121,19 +121,10 @@ class ZoneAppointmentResource extends Resource
     public static function getRelations(): array
     {
         return [
-            ZoneAppointmentResource\RelationManagers\ClientsRelationManager::class,
+            ZoneAppointmentResource\RelationManagers\SalesPersonRelationManager::class,
             ZoneAppointmentResource\RelationManagers\AppointmentsRelationManager::class,
         ];
     }
-
-    /* public static function getWidgets(): array
-    {
-        return [
-            ZoneAppointmentResource\Widgets\AppointmentsOverview::class,
-        ];
-    } */
-
-
 
     public static function getPages(): array
     {
@@ -141,7 +132,8 @@ class ZoneAppointmentResource extends Resource
             'index' => Pages\ListZoneAppointments::route('/'),
             // 'create' => Pages\CreateZoneAppointment::route('/create'),
             // 'edit' => Pages\EditZoneAppointment::route('/{record}/edit'),
-            'view' => Pages\ViewZoneAppointment::route('/{record}/view')
+            'view' => Pages\ViewZoneAppointment::route('/{record}/view'),
+            'calendar' => Pages\AppointmentCalendar::route('/calendar')
         ];
     }
 }

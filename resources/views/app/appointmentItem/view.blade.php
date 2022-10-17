@@ -10,7 +10,8 @@
     {{-- @if ((! $this->hasCombinedRelationManagerTabsWithForm()) || (! count($relationManagers)))
     {{ $this->form }}
     @endif --}}
-        <x-filament::card :heading="$record->salesPerson->name">
+        <x-filament::card
+        :heading="$record->salesPerson->name">
             <ul>
                 <li>
                     <x-filament-support::link icon="heroicon-o-phone" size="sm" href="tel:{{$record->phone}}">
