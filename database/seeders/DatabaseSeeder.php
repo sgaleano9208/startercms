@@ -21,8 +21,8 @@ class DatabaseSeeder extends Seeder
                 'password' => \Hash::make('admin'),
             ]);
 
-        $this->call(AppointmentSeeder::class);
         $this->call(BrandSeeder::class);
+        $this->call(ClientSeeder::class);
         $this->call(ClientCooperativeHistorySeeder::class);
         $this->call(ClientMonthlySaleSeeder::class);
         $this->call(ClientSalesDropSeeder::class);
@@ -40,14 +40,12 @@ class DatabaseSeeder extends Seeder
         $this->call(PromotionItemSeeder::class);
         $this->call(ProposalSeeder::class);
         $this->call(ProposalItemSeeder::class);
+        $this->call(SalesPersonSeeder::class);
         $this->call(SizeSeeder::class);
         $this->call(StateSeeder::class);
         $this->call(SubFamilySeeder::class);
         $this->call(TypeOfPaymentSeeder::class);
         $this->call(TypologySeeder::class);
         $this->call(UserSeeder::class);
-        $this->call(ZoneAppointmentSeeder::class);
-        $this->call(SalesPersonSeeder::class);
-        $this->call(ClientSeeder::class);
     }
 }

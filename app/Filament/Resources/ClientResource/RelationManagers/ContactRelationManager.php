@@ -3,12 +3,14 @@
 namespace App\Filament\Resources\ClientResource\RelationManagers;
 
 use Filament\Forms;
-use Filament\Resources\Form;
-use Filament\Resources\RelationManagers\RelationManager;
-use Filament\Resources\Table;
 use Filament\Tables;
+use Filament\Resources\Form;
+use Filament\Resources\Table;
+use Filament\Resources\Pages\ViewRecord;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Filament\Resources\RelationManagers\RelationManager;
+use Illuminate\Database\Eloquent\Model;
 
 class ContactRelationManager extends RelationManager
 {
@@ -46,8 +48,10 @@ class ContactRelationManager extends RelationManager
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('name'),
-                Tables\Columns\TextColumn::make('phone'),
-                Tables\Columns\TextColumn::make('email'),
+                Tables\Columns\TextColumn::make('phone')
+                ->url(fn(Model $record) => 'tel:'.$record->phone),
+                Tables\Columns\TextColumn::make('email')
+                ->url(fn(Model $record) => 'mailto:'.$record->email),
                 Tables\Columns\TextColumn::make('area')
                     ->enum([
                         'admin' => 'Admin',
@@ -62,14 +66,25 @@ class ContactRelationManager extends RelationManager
                 //
             ])
             ->headerActions([
-                Tables\Actions\CreateAction::make(),
+                Tables\Actions\CreateAction::make()
+                ->visible(function ($livewire) {
+                    return !is_subclass_of($livewire->pageClass, ViewRecord::class);
+                }),
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
+                Tables\Actions\EditAction::make()
+                ->visible(function ($livewire) {
+                    return !is_subclass_of($livewire->pageClass, ViewRecord::class);
+                }),
+                Tables\Actions\DeleteAction::make()
+                ->visible(function ($livewire) {
+                    return !is_subclass_of($livewire->pageClass, ViewRecord::class);
+                }),
             ])
             ->bulkActions([
-                Tables\Actions\DeleteBulkAction::make(),
+                Tables\Actions\DeleteBulkAction::make()->visible(function ($livewire) {
+                    return !is_subclass_of($livewire->pageClass, ViewRecord::class);
+                }),
             ]);
     }
 }

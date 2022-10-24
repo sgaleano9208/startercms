@@ -2,21 +2,21 @@
 
 namespace App\Filament\Resources\ClientResource\RelationManagers;
 
-use Closure;
-use Filament\Forms;
 use Filament\Tables;
 use App\Models\Client;
-use Livewire\Livewire;
-use App\Models\Cooperative;
+use Livewire\Component;
 use Filament\Resources\Form;
 use Filament\Resources\Table;
+use Illuminate\Support\Carbon;
 use Filament\Forms\Components\Select;
+use Filament\Forms\Components\Textarea;
 use Illuminate\Database\Eloquent\Model;
+use Filament\Resources\Pages\ViewRecord;
+use Filament\Forms\Components\DatePicker;
 use Illuminate\Database\Eloquent\Builder;
-use Filament\Forms\Components\Actions\Action;
-use Filament\Forms\Components\TextInput;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Filament\Resources\RelationManagers\RelationManager;
+use App\Filament\Resources\ClientResource\Pages\ViewClient;
 
 class ClientCooperativeHistoriesRelationManager extends RelationManager
 {
@@ -42,7 +42,17 @@ class ClientCooperativeHistoriesRelationManager extends RelationManager
                     return $query;
                 })
                 ->required()
-                ->label('Cooperatives'),
+                ->label('Cooperatives')
+                ->columnSpan('full'),
+                DatePicker::make('start_date')
+                ->displayFormat('d/m/Y')
+                ->closeOnDateSelection(),
+                DatePicker::make('end_date')
+                ->displayFormat('d/m/Y')
+                ->closeOnDateSelection(),
+                Textarea::make('observation')
+                ->maxLength(255)
+                ->columnSpan('full'),
             ]);
     }
 
@@ -51,22 +61,35 @@ class ClientCooperativeHistoriesRelationManager extends RelationManager
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('cooperative.name'),
-                Tables\Columns\TextColumn::make('start_date')->date('d/m/Y'),
-                Tables\Columns\TextColumn::make('end_date')->date('d/m/Y'),
-                Tables\Columns\TextColumn::make('observation'),
+                Tables\Columns\TextColumn::make('start_date')
+                ->formatStateUsing(fn($state) => (!$state) ? '-' : Carbon::parse($state)->format('d/m/Y')),
+                Tables\Columns\TextColumn::make('end_date')
+                ->formatStateUsing(fn($state) => (!$state) ? 'To date' : Carbon::parse($state)->format('d/m/Y')),
             ])
             ->filters([
                 //
             ])
             ->headerActions([
-                Tables\Actions\CreateAction::make(),
+                Tables\Actions\CreateAction::make()
+                ->visible(function ($livewire) {
+                    return !is_subclass_of($livewire->pageClass, ViewRecord::class);
+                }),
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
+                Tables\Actions\EditAction::make()
+                ->visible(function ($livewire) {
+                    return !is_subclass_of($livewire->pageClass, ViewRecord::class);
+                }),
+                Tables\Actions\DeleteAction::make()
+                ->visible(function ($livewire) {
+                    return !is_subclass_of($livewire->pageClass, ViewRecord::class);
+                }),
             ])
             ->bulkActions([
-                Tables\Actions\DeleteBulkAction::make(),
+                Tables\Actions\DeleteBulkAction::make()
+                ->visible(function ($livewire) {
+                    return !is_subclass_of($livewire->pageClass, ViewRecord::class);
+                }),
             ]);
     }
 }

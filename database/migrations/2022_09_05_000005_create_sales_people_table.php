@@ -14,6 +14,7 @@ return new class extends Migration {
     {
         Schema::create('sales_people', function (Blueprint $table) {
             $table->bigIncrements('id');
+            $table->string('photo')->nullable();
             $table->string('name');
             $table
                 ->string('email')
@@ -26,7 +27,6 @@ return new class extends Migration {
             $table->string('cod');
             $table->unsignedBigInteger('commercial_id')->nullable();
             $table->unsignedBigInteger('sales_manager_id')->nullable();
-            $table->string('photo')->nullable();
         });
     }
 

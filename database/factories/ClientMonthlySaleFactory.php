@@ -24,9 +24,8 @@ class ClientMonthlySaleFactory extends Factory
     {
         return [
             'date' => $this->faker->date,
-            'sales' => $this->faker->randomNumber(1),
-            'client_id' => \App\Models\Client::factory(),
-            'cooperative_id' => \App\Models\Cooperative::factory(),
+            'client_no_nav' => \App\Models\Client::factory(),
+            'cooperative_cod' => \App\Models\Cooperative::factory(),
         ];
     }
 }

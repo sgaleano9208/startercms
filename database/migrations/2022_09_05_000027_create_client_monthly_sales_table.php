@@ -14,10 +14,9 @@ return new class extends Migration {
     {
         Schema::create('client_monthly_sales', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->unsignedBigInteger('client_id');
-            $table->unsignedBigInteger('cooperative_id');
+            $table->unsignedBigInteger('client_no_nav');
             $table->date('date');
-            $table->decimal('sales');
+            $table->unsignedBigInteger('cooperative_cod');
 
             $table->timestamps();
         });

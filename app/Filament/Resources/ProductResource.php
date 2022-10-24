@@ -54,12 +54,12 @@ class ProductResource extends Resource
                                     ->uploadProgressIndicatorPosition('right'),
                                 FileUpload::make('certificate')
                                     ->acceptedFileTypes(['application/pdf'])
-                                    ->label('Certificate'),
+                                    ->label('Certificate')
+                                    ->enableDownload(),
                                 FileUpload::make('technical_sheet')
                                     ->acceptedFileTypes(['application/pdf'])
                                     ->label('Technical Sheet')
-                                    ->enableDownload()
-                                    ->enableOpen(),
+                                    ->enableDownload(),
                                 Radio::make('type')
                                     ->inline()
                                     ->options([
@@ -131,15 +131,19 @@ class ProductResource extends Resource
                 SelectFilter::make('family_id')
                     ->relationship('family', 'name')
                     ->label('Family')
-                    ->searchable(),
+                    ->multiple(),
                 SelectFilter::make('sub_family_id')
                     ->relationship('subFamily', 'name')
                     ->label('Sub Family')
-                    ->searchable(),
+                    ->multiple(),
+                SelectFilter::make('brand_id')
+                    ->relationship('brand', 'name')
+                    ->label('Brand')
+                    ->multiple(),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
+                // Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\DeleteBulkAction::make(),

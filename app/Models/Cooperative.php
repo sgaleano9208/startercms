@@ -22,7 +22,11 @@ class Cooperative extends Model
 
     public function clientMonthlySales()
     {
-        return $this->hasMany(ClientMonthlySale::class);
+        return $this->hasMany(
+            ClientMonthlySale::class,
+            'cooperative_cod',
+            'cod'
+        );
     }
 
     public function clients()

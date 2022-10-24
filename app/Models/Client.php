@@ -10,6 +10,7 @@ class Client extends Model
 {
     use HasFactory;
     use Searchable;
+    use \Znck\Eloquent\Traits\BelongsToThrough;
 
     protected $fillable = [
         'name',
@@ -54,6 +55,11 @@ class Client extends Model
         return $this->belongsTo(SalesPerson::class);
     }
 
+    public function commercial()
+    {
+        return $this->BelongsToThrough(User::class, SalesPerson::class,'','',[User::class => 'commercial_id'] );
+    }
+
     public function contacts()
     {
         return $this->hasMany(Contact::class);
@@ -69,19 +75,18 @@ class Client extends Model
         return $this->hasMany(Promotion::class);
     }
 
+    public function clientMonthlySales()
+    {
+        return $this->hasMany(
+            ClientMonthlySale::class,
+            'client_no_nav',
+            'no_nav'
+        );
+    }
+
     public function clientSalesDrops()
     {
         return $this->hasMany(ClientSalesDrop::class);
-    }
-
-    public function clientMonthlySales()
-    {
-        return $this->hasMany(ClientMonthlySale::class);
-    }
-
-    public function appointments()
-    {
-        return $this->hasMany(Appointment::class);
     }
 
     public function cooperatives()

@@ -24,22 +24,22 @@ class ProductVariationsRelationManager extends RelationManager
 
         return $form
             ->schema([
-                FOrms\Components\TextInput::make('name')
+                /* Forms\Components\TextInput::make('name')
                 ->disabled()
                 ->default(fn($livewire) => $livewire->ownerRecord->ref)
-                ->columnSpan('full'),
+                ->columnSpan('full'), */
                 Forms\Components\Select::make('color_id')
                 ->relationship('color', 'name')
-                ->reactive()
+                /* ->reactive()
                 ->afterStateUpdated(function(callable $set, $state, $livewire){
                     $originalName = $livewire->ownerRecord->ref;
                     $colName = Color::where('id', $state)->pluck('name');
                     $set('name', null);
                     $set('name', $originalName.'-'.$colName->implode(','));
-                }),
+                }) */,
                 Forms\Components\Select::make('size_id')
                 ->relationship('size', 'name')
-                ->reactive()
+                /* ->reactive()
                 ->afterStateUpdated(function(callable $set, callable $get, $state, $livewire){
                     $originalName = $livewire->ownerRecord->ref;
                     $sizeName = Size::where('id', $state)->pluck('name');
@@ -50,23 +50,27 @@ class ProductVariationsRelationManager extends RelationManager
                     $colName = Color::where('id', $get('color_id'))->pluck('name');
                     $set('name', null);
                     $set('name', $originalName.'-'.$colName->implode(',').'-'.$sizeName->implode(','));
-                }),
+                }) */,
                 Forms\Components\TextInput::make('price')
                 ->numeric()
                 ->mask(fn (Mask $mask) => $mask->money(prefix: '€', thousandsSeparator: ',', decimalPlaces: 2))
-                ->reactive()
+                ->lazy()
                 ->afterStateUpdated(fn(callable $set, $state) => $set('incomplete_price', (($state * 0.7) + $state))),
+
                 Forms\Components\TextInput::make('units')
                 ->numeric()
                 ->minValue(0),
+
                 Forms\Components\TextInput::make('min_qty')
                 ->label('Min. Qty')
                 ->numeric()
                 ->minValue(0),
+
                 Forms\Components\TextInput::make('incomplete_price')
                 ->label('Incomplete box price')
                 ->numeric()
                 ->mask(fn (Mask $mask) => $mask->money(prefix: '€', thousandsSeparator: ',', decimalPlaces: 2)),
+
                 Forms\Components\Radio::make('status')
                 ->inline()
                 ->options([
@@ -74,6 +78,7 @@ class ProductVariationsRelationManager extends RelationManager
                     'inactive' => 'Inactive',
                 ])
                 ->default('active'),
+
                 Forms\Components\Toggle::make('to_order')
                 ->onIcon('heroicon-s-lightning-bolt')
                 ->offIcon('heroicon-s-user')
@@ -118,7 +123,14 @@ class ProductVariationsRelationManager extends RelationManager
                 //
             ])
             ->headerActions([
-                Tables\Actions\CreateAction::make(),
+                Tables\Actions\CreateAction::make()
+                ->mutateFormDataUsing(function (array $data): array {
+                    $data['name'] = 'lo que quiera';
+
+                    dd($data);
+
+                    return $data;
+                }),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
