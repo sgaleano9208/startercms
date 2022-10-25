@@ -12,6 +12,7 @@ class EditClient extends EditRecord
 
     public $visible = '';
     public $disable = '';
+    public $cooperatives = [];
 
     protected function getActions(): array
     {

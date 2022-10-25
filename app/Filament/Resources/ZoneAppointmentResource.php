@@ -41,7 +41,8 @@ class ZoneAppointmentResource extends Resource
                 Forms\Components\DatePicker::make('start_date')
                     ->displayFormat('d/m/Y')
                     ->required()
-                    ->reactive(),
+                    ->reactive()
+                    ->closeOnDateSelection(),
                 Forms\Components\Radio::make('status')
                     ->options(['pending' => 'Pending', 'done' => 'Done'])
                     ->default('pending')
@@ -49,7 +50,8 @@ class ZoneAppointmentResource extends Resource
                 Forms\Components\DatePicker::make('end_date')
                     ->displayFormat('d/m/Y')
                     ->required()
-                    ->minDate(fn (callable $get) => $get('start_date')),
+                    ->minDate(fn (callable $get) => $get('start_date'))
+                    ->closeOnDateSelection(),
             ]);
     }
 

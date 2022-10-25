@@ -45,11 +45,6 @@ class User extends Authenticatable
         return $this->hasMany(ClientSalesDropDetail::class);
     }
 
-    public function clients()
-    {
-        return $this->hasManyThrough(Client::class, SalesPerson::class);
-    }
-
     public function isSuperAdmin()
     {
         return in_array($this->email, config('auth.super_admins'));

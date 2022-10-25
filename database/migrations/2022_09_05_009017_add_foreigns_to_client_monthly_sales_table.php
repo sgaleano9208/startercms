@@ -14,14 +14,14 @@ return new class extends Migration {
     {
         Schema::table('client_monthly_sales', function (Blueprint $table) {
             $table
-                ->foreign('client_no_nav')
+                ->foreign('client_id')
                 ->references('id')
                 ->on('clients')
                 ->onUpdate('CASCADE')
                 ->onDelete('CASCADE');
 
             $table
-                ->foreign('cooperative_cod')
+                ->foreign('cooperative_id')
                 ->references('id')
                 ->on('cooperatives')
                 ->onUpdate('CASCADE')
@@ -37,8 +37,8 @@ return new class extends Migration {
     public function down()
     {
         Schema::table('client_monthly_sales', function (Blueprint $table) {
-            $table->dropForeign(['client_no_nav']);
-            $table->dropForeign(['cooperative_cod']);
+            $table->dropForeign(['client_id']);
+            $table->dropForeign(['cooperative_id']);
         });
     }
 };

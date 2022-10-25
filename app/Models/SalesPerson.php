@@ -13,12 +13,12 @@ class SalesPerson extends Model
 
     protected $fillable = [
         'name',
-        'photo',
         'email',
         'phone',
         'cod',
         'commercial_id',
         'sales_manager_id',
+        'photo',
     ];
 
     protected $searchableFields = ['*'];
@@ -40,5 +40,10 @@ class SalesPerson extends Model
     public function salesManager()
     {
         return $this->belongsTo(User::class, 'sales_manager_id');
+    }
+
+    public function zoneAppointments()
+    {
+        return $this->hasMany(ZoneAppointment::class);
     }
 }

@@ -27,6 +27,7 @@ class SalesPersonFactory extends Factory
             'email' => $this->faker->unique->email,
             'phone' => $this->faker->unique->phoneNumber,
             'cod' => $this->faker->text(255),
+            'photo' => $this->faker->imageUrl(640, 480, 'animals', true),
             'commercial_id' => \App\Models\User::factory(),
             'sales_manager_id' => \App\Models\User::factory(),
         ];
