@@ -37,6 +37,7 @@ class ClientResource extends Resource
     protected static ?string $model = Client::class;
 
     public $record;
+    public $cooperatives;
 
     protected static ?string $navigationIcon = 'heroicon-o-users';
 
@@ -55,7 +56,7 @@ class ClientResource extends Resource
                                     ->columnSpan('full'),
                                 TextInput::make('phone')
                                     ->unique(ignoreRecord: true)
-                                    ->tel(),
+                                    ->tel(),    
                                 TextInput::make('email')
                                     ->unique(ignoreRecord: true)
                                     ->email(),
@@ -115,7 +116,7 @@ class ClientResource extends Resource
                                             ])
                                             ->visible(fn ($livewire): bool => $livewire->visible != null);
                                     })
-                                    ->createOptionUsing(static function (ClientCooperativeHistory $clientCoopHistory, Client $record, callable $set, callable $get, array $data) {
+                                    ->createOptionUsing(static function (ClientCooperativeHistory $clientCoopHistory, Client $record, array $data) {
                                         $data['client_id'] = $record->id;
                                         $clientCoopHistory->create($data);
                                     }),
@@ -235,29 +236,6 @@ class ClientResource extends Resource
                 ->relationship('commercial', 'name')
                 ->multiple()
                 ->searchable(),
-
-
-            /* Select::make('country_id')
-                ->relationship('country', 'name')
-                ->label('Country')
-                ->searchable()
-                ->reactive()
-                ->afterStateUpdated(function (callable $set) {
-                    $set('state_id', null);
-                }),
-            Select::make('state_id')
-                ->options(function (callable $get) {
-                    $country = Country::find($get('country_id'));
-                    if (!$country) {
-                        // return State::all()->pluck('name', 'id');
-                        return ['Please select a country'];
-                    }
-                    return $country->states()->pluck('name', 'id');
-                })
-                ->placeholder('Please select a country')
-                ->searchable()
-                ->label('State'), */
-
                 Filter::make('country_state')
                 ->form([
                     Select::make('country_id')
