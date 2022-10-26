@@ -3,7 +3,6 @@
 namespace App\Filament\Resources\ZoneAppointmentResource\Pages;
 
 use Filament\Pages\Actions;
-use App\Models\ZoneAppointment;
 use Illuminate\Database\Eloquent\Model;
 use Filament\Resources\Pages\ListRecords;
 use App\Filament\Resources\ZoneAppointmentResource;

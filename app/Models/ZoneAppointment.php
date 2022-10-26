@@ -36,4 +36,5 @@ class ZoneAppointment extends Model
     {
         return $this->hasMany(Appointment::class);
     }
+    
 }

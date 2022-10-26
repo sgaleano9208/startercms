@@ -8,7 +8,6 @@ use Filament\Resources\Form;
 use Filament\Resources\Table;
 use App\Models\ZoneAppointment;
 use Filament\Resources\Resource;
-use Filament\Forms\Components\Card;
 use Filament\Tables\Actions\Action;
 use Filament\Tables\Actions\ViewAction;
 use Filament\Tables\Columns\TextColumn;
@@ -62,9 +61,9 @@ class ZoneAppointmentResource extends Resource
             ->columns([
                 Split::make([
                     ImageColumn::make('salesPerson.avatar')
-                    ->size(60)
-                    ->rounded()
-                    ->grow(false),
+                        ->size(60)
+                        ->rounded()
+                        ->grow(false),
                     Stack::make([
                         TextColumn::make('salesPerson.name')
                             ->alignLeft()
@@ -77,6 +76,14 @@ class ZoneAppointmentResource extends Resource
                             ->alignLeft()
                             ->icon('heroicon-s-mail'),
                     ]),
+                    TextColumn::make('start_date')
+                        ->date('d/m/Y')
+                        ->icon('heroicon-o-calendar')
+                        ->color('success'),
+                    TextColumn::make('end_date')
+                        ->date('d/m/Y')
+                        ->icon('heroicon-o-calendar')
+                        ->color('danger'),
                     BadgeColumn::make('status')
                         ->enum(['pending' => 'Pending', 'done' => 'Done'])
                         ->colors([
@@ -88,28 +95,22 @@ class ZoneAppointmentResource extends Resource
                             'heroicon-s-x-circle' => 'pending'
                         ])
                         ->alignRight(),
-                        ]),
-                        Panel::make([
-                            Stack::make([
-                                TextColumn::make('start_date')
-                                ->date('d/m/Y')
-                                ->icon('heroicon-o-calendar')
-                                ->color('success'),
-                            TextColumn::make('end_date')
-                                ->date('d/m/Y')
-                                ->icon('heroicon-o-calendar')
-                                ->color('danger'),
-                            ]),
-                        ])->collapsible(),
+                ]),
+                Panel::make([
+                    Stack::make([
+
+                        TextColumn::make('appointments.client_id')
+                    ]),
+                ])->collapsible(),
             ])
             ->filters([
                 //
             ])
             ->actions([
                 ViewAction::make('view')
-                ->button()
-                ->color('success')
-                ->icon('heroicon-s-collection'),
+                    ->button()
+                    ->color('success')
+                    ->icon('heroicon-s-collection'),
                 ActionGroup::make([
                     Tables\Actions\EditAction::make(),
                     Tables\Actions\DeleteAction::make(),

@@ -18,7 +18,7 @@ return new class extends Migration {
             $table->unsignedBigInteger('client_id');
             $table->date('date');
             $table->dateTime('time');
-            $table->json('goals');
+            $table->json('goals')->nullable();
             $table->string('attachments')->nullable();
             $table->text('details')->nullable();
             $table->enum('status', ['pending', 'done']);

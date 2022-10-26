@@ -56,7 +56,7 @@ class ClientResource extends Resource
                                     ->columnSpan('full'),
                                 TextInput::make('phone')
                                     ->unique(ignoreRecord: true)
-                                    ->tel(),    
+                                    ->tel(),
                                 TextInput::make('email')
                                     ->unique(ignoreRecord: true)
                                     ->email(),
@@ -121,9 +121,9 @@ class ClientResource extends Resource
                                         $clientCoopHistory->create($data);
                                     }),
                                 Select::make('sales_person_id')
-                                ->relationship('salesPerson', 'name')
-                                ->searchable()
-                                ->preload(),
+                                    ->relationship('salesPerson', 'name')
+                                    ->searchable()
+                                    ->preload(),
                                 Select::make('typology_id')
                                     ->relationship('typology', 'name')
                                     ->label('Typology')
@@ -225,46 +225,49 @@ class ClientResource extends Resource
                     ])
                     ->multiple(),
                 SelectFilter::make('cooperatives')
-                ->relationship('cooperatives', 'name')
-                ->multiple()
-                ->searchable(),
+                    ->relationship('cooperatives', 'name')
+                    ->multiple()
+                    ->searchable(),
                 SelectFilter::make('sales_person_id')
-                ->relationship('salesPerson', 'name')
-                ->multiple()
-                ->searchable(),
+                    ->relationship('salesPerson', 'name')
+                    ->multiple()
+                    ->searchable(),
                 SelectFilter::make('commercial')
-                ->relationship('commercial', 'name')
-                ->multiple()
-                ->searchable(),
+                    ->relationship('commercial', 'name')
+                    ->multiple()
+                    ->searchable(),
                 Filter::make('country_state')
-                ->form([
-                    Select::make('country_id')
-                    ->options(Country::has('clients')->pluck('name', 'id'))
-                    ->reactive()
-                    ->callAfterStateUpdated(fn(callable $set) => $set('state_id', null)),
-                    Select::make('state_id')
-                    ->options(function(callable $get){
-                        $country = Country::find($get('country_id'));
-                        if(!$country){
-                            return ['First select a country'];
-                        }
-                        return $country->states()->pluck('name', 'id');
-                    })
-                ])
-                ->query(function(Builder $query, array $data): Builder {
-                    return $query
-                    ->when($data['country_id'], 
-                    fn(Builder $query): Builder => $query->where('country_id', $data['country_id']))
-                    ->when($data['state_id'], 
-                    fn(Builder $query): Builder => $query->where('state_id', $data['state_id']))
-                    ;
-                }),
+                    ->form([
+                        Select::make('country_id')
+                            ->options(Country::has('clients')->pluck('name', 'id'))
+                            ->reactive()
+                            ->callAfterStateUpdated(fn (callable $set) => $set('state_id', null)),
+                        Select::make('state_id')
+                            ->options(function (callable $get) {
+                                $country = Country::find($get('country_id'));
+                                if (!$country) {
+                                    return ['First select a country'];
+                                }
+                                return $country->states()->pluck('name', 'id');
+                            })
+                    ])
+                    ->query(function (Builder $query, array $data): Builder {
+                        return $query
+                            ->when(
+                                $data['country_id'],
+                                fn (Builder $query): Builder => $query->where('country_id', $data['country_id'])
+                            )
+                            ->when(
+                                $data['state_id'],
+                                fn (Builder $query): Builder => $query->where('state_id', $data['state_id'])
+                            );
+                    }),
 
                 SelectFilter::make('typology_id')
-                ->relationship('typology', 'name')
-                ->multiple()
-                ->label('Typology')
-                ->searchable(),
+                    ->relationship('typology', 'name')
+                    ->multiple()
+                    ->label('Typology')
+                    ->searchable(),
             ])
             ->actions([
                 Tables\Actions\EditAction::make()
@@ -272,25 +275,37 @@ class ClientResource extends Resource
             ])
             ->bulkActions([
                 Tables\Actions\DeleteBulkAction::make(),
-
                 Tables\Actions\BulkAction::make('client_update')
-                ->action(function(Collection $records, array $data): void {
-                    foreach($records as $record) {
-                        $record->status = $data['status'];
-                        $record->save();
-                    }
-                })
-                ->form([
-                    Select::make('status')
-                    ->options([
-                        'active' => 'Active',
-                        'inactive' => 'Inactive',
+                    ->action(function (Collection $records, array $data): void {
+                        //LA FUNCION ARRAY_FILTER LIMPIA LOS DATOS VACIOS DEL ARRAY.
+                        $records->each->update(array_filter($data));
+                        /*  foreach($records as $record) {
+                        $record->save($data);
+                    } */
+                    })
+                    ->form([
+                        Select::make('status')
+                            ->options([
+                                'active' => 'Active',
+                                'inactive' => 'Inactive',
+                            ]),
+                        Select::make('type')
+                            ->options([
+                                'member' => 'Member',
+                                'directional' => 'Directional',
+                                'lead' => 'Lead'
+                            ]),
+                        Select::make('sales_person_id')
+                            ->relationship('salesPerson', 'name')
+                            ->searchable()
+                            ->preload(),
+                        Select::make('typology_id')
+                            ->relationship('typology', 'name')
+                            ->label('Typology')
+                            ->searchable(),
                     ])
-                    ->default('active')
-                    ->required()
-                    ->disablePlaceholderSelection(),
-                ])
-                ->deselectRecordsAfterCompletion()
+                    ->deselectRecordsAfterCompletion()
+                    
             ]);
     }
 
