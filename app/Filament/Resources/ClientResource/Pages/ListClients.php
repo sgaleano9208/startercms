@@ -24,10 +24,15 @@ class ListClients extends ListRecords
         return fn (Model $record): string => route('filament.resources.clients.view', ['record' => $record]);
     }
 
+    protected function getTableRecordsPerPageSelectOptions(): array 
+    {
+        return [25, 50, 150, 200];
+    } 
+
     protected function getHeaderWidgets(): array
     {
         return [
-            // ClientResource\Widgets\ClientOverview::class,
+            ClientResource\Widgets\ClientOverview::class,
         ];
     }
 }
