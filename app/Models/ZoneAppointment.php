@@ -27,14 +27,6 @@ class ZoneAppointment extends Model
         'end_date' => 'date',
     ];
 
-    public function scopeByBusy($query,$start_date,$end_date) 
-    { 
-        return $query->whereBetween('start_date', [$start_date, $end_date]) 
-            ->orWhereBetween('end_date', [$start_date, $end_date]) 
-            ->orWhereRaw('? BETWEEN start_date and end_date', [$start_date]) 
-            ->orWhereRaw('? BETWEEN start_date and end_date', [$end_date]); 
-    }
-
     public function salesPerson()
     {
         return $this->belongsTo(SalesPerson::class);

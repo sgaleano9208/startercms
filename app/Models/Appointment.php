@@ -17,8 +17,7 @@ class Appointment extends Model
         'date',
         'time',
         'goals',
-        'attachments',
-        'details',
+        'note',
         'status',
     ];
 
@@ -26,7 +25,6 @@ class Appointment extends Model
 
     protected $casts = [
         'date' => 'date',
-        'time' => 'datetime',
         'goals' => 'array',
     ];
 
@@ -38,5 +36,10 @@ class Appointment extends Model
     public function client()
     {
         return $this->belongsTo(Client::class);
+    }
+
+    public function actionPlans()
+    {
+        return $this->hasMany(ActionPlan::class);
     }
 }

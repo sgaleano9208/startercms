@@ -12,15 +12,11 @@ return new class extends Migration {
      */
     public function up()
     {
-        Schema::create('appointments', function (Blueprint $table) {
+        Schema::create('action_plans', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->unsignedBigInteger('zone_appointment_id');
-            $table->unsignedBigInteger('client_id');
-            $table->date('date');
-            $table->time('time');
-            $table->string('goals')->nullable();
-            $table->text('note')->nullable();
-            $table->enum('status', ['pending', 'done']);
+            $table->unsignedBigInteger('appointment_id');
+            $table->json('actions')->nullable();
+            $table->enum('status', ['pending', 'closed']);
 
             $table->timestamps();
         });
@@ -33,6 +29,6 @@ return new class extends Migration {
      */
     public function down()
     {
-        Schema::dropIfExists('appointments');
+        Schema::dropIfExists('action_plans');
     }
 };

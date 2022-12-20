@@ -21,6 +21,7 @@ class DatabaseSeeder extends Seeder
                 'password' => \Hash::make('admin'),
             ]);
 
+        $this->call(ActionPlanSeeder::class);
         $this->call(AppointmentSeeder::class);
         $this->call(BrandSeeder::class);
         $this->call(ClientSeeder::class);

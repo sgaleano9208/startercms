@@ -122,8 +122,7 @@ class ClientResource extends Resource
                                     }),
                                 Select::make('sales_person_id')
                                     ->relationship('salesPerson', 'name')
-                                    ->searchable()
-                                    ->preload(),
+                                    ->searchable(),
                                 Select::make('typology_id')
                                     ->relationship('typology', 'name')
                                     ->label('Typology')

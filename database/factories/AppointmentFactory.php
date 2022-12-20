@@ -24,9 +24,9 @@ class AppointmentFactory extends Factory
     {
         return [
             'date' => $this->faker->date,
-            'time' => $this->faker->dateTime,
-            'goals' => [],
-            'details' => $this->faker->sentence(20),
+            'time' => $this->faker->time,
+            'goals' => $this->faker->text(255),
+            'note' => $this->faker->text,
             'status' => 'pending',
             'zone_appointment_id' => \App\Models\ZoneAppointment::factory(),
             'client_id' => \App\Models\Client::factory(),

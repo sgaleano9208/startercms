@@ -18,7 +18,9 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Forms\Components\TextInput;
 use Filament\Tables\Columns\BadgeColumn;
 use Filament\Forms\Components\DatePicker;
+use Filament\Forms\Components\Placeholder;
 use App\Filament\Resources\ProposalResource\Pages;
+//use Awcodes\FilamentTableRepeater\Components\TableRepeater;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Filament\Resources\ProposalResource\RelationManagers;
 use Icetalker\FilamentTableRepeater\Forms\Components\TableRepeater;
@@ -37,137 +39,145 @@ class ProposalResource extends Resource
         return $form
             ->schema([
                 Card::make()
-                ->schema([
-                    TextInput::make('number')
-                    ->label('Nº')
-                    ->required()
-                    ->disabled()
-                    ->default(function(){
-                        $date = date_format(now(), 'dm');
-                        return 'PR-'.$date.'-'.random_int(001,999);
-                    }),
-                    TextInput::make('name'),
-                    DatePicker::make('date')
-                    ->required()
-                    ->default(now()),
-                    Select::make('client_id')
-                    ->relationship('client', 'name')
-                    ->required()
-                    ->preload()
-                    ->searchable(),
-                    DatePicker::make('end_date'),
-                    Select::make('type_of_payment_id')
-                    ->relationship('TypeOfPayment', 'name'),
-                    Radio::make('status')
-                    ->options([
-                        'sent' => 'Sent',
-                        'accepted' => 'Accepted',
-                        'rejected' => 'Rejected',
-                        'negotiation' => 'Negotionation',
-                    ])
-                    ->required()
-                    ->default('sent'),
-                    Textarea::make('observation')
-                    ->columnSpan('full')
-                ])->columns(2),
+                    ->schema([
+                        TextInput::make('number')
+                            ->label('Nº')
+                            ->required()
+                            ->disabled()
+                            ->default(function () {
+                                $date = date_format(now(), 'dm');
+                                return 'PR-' . $date . '-' . random_int(001, 999);
+                            }),
+                        TextInput::make('name'),
+                        DatePicker::make('date')
+                            ->required()
+                            ->default(now()),
+                        Select::make('client_id')
+                            ->relationship('client', 'name')
+                            ->required()
+                            ->preload()
+                            ->searchable(),
+                        DatePicker::make('end_date'),
+                        Select::make('type_of_payment_id')
+                            ->relationship('TypeOfPayment', 'name'),
+                        Radio::make('status')
+                            ->options([
+                                'sent' => 'Sent',
+                                'accepted' => 'Accepted',
+                                'rejected' => 'Rejected',
+                                'negotiation' => 'Negotionation',
+                            ])
+                            ->required()
+                            ->default('sent'),
+                        Textarea::make('observation')
+                            ->columnSpan('full')
+                    ])->columns(2),
                 Card::make()
-                ->schema([
-
-                    /* TableRepeater::make('proposalItems')
-                    ->relationship('proposalItems')
                     ->schema([
-                        Select::make('product_variation_id')
-                        ->options(ProductVariation::all()->where('status', 'active')->pluck('name', 'id'))
-                        ->searchable()
-                        ->label('Product')
-                        ->required()
-                        ->reactive()
-                        ->afterStateUpdated(function(callable $set, $state) {
-                            $product = ProductVariation::find($state);
-                            if($product){
-                            $set('name', $product->name);
-                            $set('price', $product->price);
-                            }
-                        }),
-                        TextInput::make('name'),
-                        TextInput::make('price')
-                        ->numeric()
-                        ->lazy()
-                        ->afterStateUpdated(function(callable $set, callable $get, $state){
-                            $netPrice = ($state * $get('quantity'));
-                            if($get('discount')){
-                            $netPrice = $state - ($state * ($get('discount') / 100));
-                            }
-                            $set('net_price', number_format($netPrice, 2, '.'));
-                        }),
-                        TextInput::make('discount')
-                        ->numeric()
-                        ->default(function(callable $get){
-                            $discount = Client::find($get('../../client_id'));
-                            return $discount->discount;
-                        }),
-                        TextInput::make('discount1')
-                        ->numeric(),
-                        TextInput::make('quantity')
-                        ->numeric()
-                        ->minValue(1)
-                        ->default(1),
-                        TextInput::make('net_price')
-                        ->numeric(),
-                    ])
-                    ->collapsible()
-                    ->defaultItems(3), */
+
+                        /* TableRepeater::make('proposalItems')
+                            ->relationship('proposalItems')
+                            ->schema([
+                                Select::make('product_variation_id')
+                                    ->options(ProductVariation::all()->where('status', 'active')->pluck('name', 'id'))
+                                    ->searchable()
+                                    ->required()
+                                    ->disableLabel()
+                                    ->reactive()
+                                    ->afterStateUpdated(function (callable $set, $state) {
+                                        $product = ProductVariation::find($state);
+                                        if ($product) {
+                                            $set('name', $product->name);
+                                            $set('price', $product->price);
+                                        }
+                                    }),
+                                TextInput::make('name')->disableLabel(),
+                                TextInput::make('price')
+                                    ->disableLabel()
+                                    ->numeric()
+                                    ->lazy()
+                                    ->afterStateUpdated(function (callable $set, callable $get, $state) {
+                                        $netPrice = ($state * $get('quantity'));
+                                        if ($get('discount')) {
+                                            $netPrice = $state - ($state * ($get('discount') / 100));
+                                        }
+                                        $set('net_price', number_format($netPrice, 2, '.'));
+                                    }),
+                                TextInput::make('discount')
+                                    ->numeric()
+                                    ->default(function (callable $get) {
+                                        $discount = Client::find($get('../../client_id'));
+                                        return $discount->discount;
+                                    })->disableLabel(),
+                                TextInput::make('discount1')
+                                    ->numeric()
+                                    ->disableLabel(),
+                                TextInput::make('quantity')
+                                    ->numeric()
+                                    ->minValue(1)
+                                    ->default(1)
+                                    ->disableLabel(),
+                                TextInput::make('net_price')
+                                    ->numeric()
+                                    ->disableLabel(),
+                            ])
+                            ->columnSpan('full')
+                            ->defaultItems(3), */
 
 
-                    Repeater::make('proposalItems')
-                    ->relationship()
-                    ->label('Proposal details')
-                    ->schema([
-                        Select::make('product_variation_id')
-                        ->options(ProductVariation::all()->where('status', 'active')->pluck('name', 'id'))
-                        ->searchable()
-                        ->label('Product')
-                        ->required()
-                        ->reactive()
-                        ->afterStateUpdated(function(callable $set, $state) {
-                            $product = ProductVariation::find($state);
-                            if($product){
-                            $set('name', $product->name);
-                            $set('price', $product->price);
-                            }
-                        }),
-                        TextInput::make('name'),
-                        TextInput::make('price')
-                        ->numeric()
-                        ->lazy()
-                        ->afterStateUpdated(function(callable $set, callable $get, $state){
-                            $netPrice = ($state * $get('quantity'));
-                            if($get('discount')){
-                            $netPrice = $state - ($state * ($get('discount') / 100));
-                            }
-                            $set('net_price', number_format($netPrice, 2, '.'));
-                        }),
-                        TextInput::make('discount')
-                        ->numeric()
-                        ->default(function(callable $get){
-                            $discount = Client::find($get('../../client_id'));
-                            return $discount->discount;
-                        }),
-                        TextInput::make('discount1')
-                        ->numeric(),
-                        TextInput::make('quantity')
-                        ->numeric()
-                        ->minValue(1)
-                        ->default(1),
-                        TextInput::make('net_price')
-                        ->numeric(),
-                        ])
-                    ->columns(7)
-                    ->createItemButtonLabel('Add new product')
-                    ->defaultItems(0)
-                    ->cloneable()
-                    ->collapsible()
-                    ->itemLabel(fn (array $state): ?string => $state['name'] ?? null),
+                        Repeater::make('proposalItems')
+                            ->relationship()
+                            ->label('Proposal details')
+                            ->schema([
+                                Select::make('product_variation_id')
+                                    ->options(ProductVariation::all()->where('status', 'active')->pluck('name', 'id'))
+                                    ->searchable()
+                                    ->label('Product')
+                                    ->required()
+                                    ->reactive()
+                                    ->afterStateUpdated(function (callable $set, $state) {
+                                        $product = ProductVariation::find($state);
+                                        if ($product) {
+                                            $set('name', $product->name);
+                                            $set('price', $product->price);
+                                        }
+                                    }),
+                                TextInput::make('name'),
+                                TextInput::make('price')
+                                    ->numeric()
+                                    ->lazy()
+                                    ->afterStateUpdated(function (callable $set, callable $get, $state) {
+                                        $netPrice = ($state * $get('quantity'));
+                                        if ($get('discount')) {
+                                            $netPrice = $state - ($state * ($get('discount') / 100));
+                                        }
+                                        $set('net_price', number_format($netPrice, 2, '.'));
+                                    }),
+                                TextInput::make('discount')
+                                    ->numeric()
+                                    ->label('%Dis')
+                                    ->default(function (callable $get) {
+                                        $discount = Client::find($get('../../client_id'));
+                                        return $discount->discount;
+                                    }),
+                                TextInput::make('discount1')
+                                    ->numeric()
+                                    ->label('%Dis2'),
+                                TextInput::make('quantity')
+                                    ->numeric()
+                                    ->label('Qty')
+                                    ->minValue(1)
+                                    ->default(1),
+                                TextInput::make('net_price')
+                                    ->numeric(),
+                                Placeholder::make('total')
+                            ])
+                            ->columns(7)
+                            ->createItemButtonLabel('Add new product')
+                            ->cloneable()
+                            ->collapsible()
+                            ->itemLabel(fn (array $state): ?string => ($state['name'].' - '.$state['net_price']) ?? null),
+
                     ]),
             ]);
     }
@@ -177,36 +187,36 @@ class ProposalResource extends Resource
         return $table
             ->columns([
                 TextColumn::make('name')
-                ->searchable(),
+                    ->searchable(),
                 TextColumn::make('client.name')
-                ->searchable()
-                ->sortable(),
+                    ->searchable()
+                    ->sortable(),
                 TextColumn::make('date')
-                ->date('d/m/Y'),
+                    ->date('d/m/Y'),
                 BadgeColumn::make('status')
-                ->enum([
-                    'sent' => 'Sent',
-                    'accepted' => 'Accepted',
-                    'rejected' => 'Rejected',
-                    'negotiation' => 'Negotionation',
-                ])
-                ->colors([
-                    'primary',
-                    'warning' => 'negotiation',
-                    'success' => 'accepted',
-                    'danger' => 'rejected',
-                ])
+                    ->enum([
+                        'sent' => 'Sent',
+                        'accepted' => 'Accepted',
+                        'rejected' => 'Rejected',
+                        'negotiation' => 'Negotionation',
+                    ])
+                    ->colors([
+                        'primary',
+                        'warning' => 'negotiation',
+                        'success' => 'accepted',
+                        'danger' => 'rejected',
+                    ])
             ])
             ->filters([
                 //
             ])
             ->actions([
                 Tables\Actions\Action::make('pdf')
-                ->action('donwloadPDF')
-                ->iconButton()
-                ->icon('heroicon-o-download')
-                ->color('primary')
-                ->tooltip('Download pdf'),
+                    ->action('donwloadPDF')
+                    ->iconButton()
+                    ->icon('heroicon-o-download')
+                    ->color('primary')
+                    ->tooltip('Download pdf'),
                 Tables\Actions\EditAction::make(),
             ])
             ->bulkActions([

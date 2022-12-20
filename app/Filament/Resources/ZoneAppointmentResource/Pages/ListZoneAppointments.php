@@ -22,27 +22,7 @@ class ListZoneAppointments extends ListRecords
             Actions\CreateAction::make()
                 ->label('Block dates')
                 ->icon('heroicon-s-plus')
-                ->color('success')
-                ->before(function (CreateAction $action, array $data) {
-                    $start = $data['start_date'];
-                    $end = $data['end_date'];
-                    $existsActive = ZoneAppointment::where(function ($query) use ($start) {
-                        $query->where('start_date', '<=', $start);
-                        $query->where('end_date', '>=', $start);
-                    })->orWhere(function ($query) use ($end) {
-                        $query->where('start_date', '<=', $end);
-                        $query->where('end_date', '>=', $end);
-                    })->count();
-                    if ($existsActive > 0) {
-                        Notification::make()
-                            ->warning()
-                            ->title('Dates already selected')
-                            ->body('The range of dates selected are already booked')
-                            ->persistent()
-                            ->send();
-                        $action->cancel();
-                    }
-                }),
+                ->color('success'),
 
             Actions\Action::make('calendar')
                 ->label('View calendar')
@@ -54,7 +34,6 @@ class ListZoneAppointments extends ListRecords
     protected function getHeaderWidgets(): array
     {
         return [
-
             ZoneAppointmentResource\Widgets\AppointmentsOverview::class,
         ];
     }

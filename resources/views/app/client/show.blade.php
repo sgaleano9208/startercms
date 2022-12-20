@@ -84,15 +84,20 @@
                     <span class="block font-bold text-md">VAT.</span>
                     {{$record->vat}}
                 </div>
+
+                <div class="col-span-1 py-3">
+                    <span class="block font-bold text-md">Typology:</span>
+                    {!! !empty($record->typology->name) ? $record->typology->name : '-' !!}
+                </div>
                 
             </div>
         </x-filament::card>
         <x-filament::card :heading="('Details')" class="sm:col-span-4 col-span-full">
             <div class="grid sm:grid-cols-2 grid-cols-1">
-                <div class="col-span-2 py-3">
+                {{-- <div class="col-span-2 py-3">
                     <span class="block font-bold text-md">Address:</span>
                     Direccion a futuro....
-                </div>
+                </div> --}}
                 <div class="col-span-1 py-3">
                     <span class="block font-bold text-md">Country:</span>
                     {!! !empty($record->country->name) ? $record->country->name : '-' !!}
@@ -112,10 +117,6 @@
                         @endforelse
                     </ul>
                     <x-filament::hr />
-                </div>
-                <div class="col-span-1 py-3">
-                    <span class="block font-bold text-md">Typology:</span>
-                    {!! !empty($record->typology->name) ? $record->typology->name : '-' !!}
                 </div>
                 <div class="col-span-1 py-3">
                     <span class="block font-bold text-md">Sales Person:</span>

@@ -10,6 +10,7 @@
     "require": {
         "php": "^8.0.2",
         "akaunting/laravel-money": "^3.1",
+        "awcodes/filament-table-repeater": "^1.0",
         "barryvdh/laravel-dompdf": "^2.0",
         "bkwld/cloner": "^3.10",
         "filament/filament": "^2.0",
@@ -23,6 +24,7 @@
         "psr/simple-cache": "^1.0",
         "pxlrbt/filament-excel": "^1.1",
         "saade/filament-fullcalendar": "^1.6",
+        "spatie/icalendar-generator": "^2.5",
         "staudenmeir/belongs-to-through": "^2.5"
     },
     "require-dev": {

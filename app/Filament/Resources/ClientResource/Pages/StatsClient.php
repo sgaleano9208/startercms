@@ -3,13 +3,9 @@
 namespace App\Filament\Resources\ClientResource\Pages;
 
 use App\Models\Client;
-use Illuminate\Http\Request;
-use App\Models\ZoneAppointment;
 use Filament\Pages\Actions\Action;
 use Filament\Resources\Pages\Page;
-use Illuminate\Database\Eloquent\Model;
 use App\Filament\Resources\ClientResource;
-use Illuminate\Support\Facades\Session;
 
 class StatsClient extends Page
 {
