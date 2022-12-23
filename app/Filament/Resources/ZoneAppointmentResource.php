@@ -27,8 +27,8 @@ class ZoneAppointmentResource extends Resource
 {
     protected static ?string $model = ZoneAppointment::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-calendar';
-
+    protected static ?string $navigationIcon = 'heroicon-s-calendar';
+    protected static ?string $activeNavigationIcon = 'heroicon-o-calendar';
     protected static ?string $navigationGroup = 'Agenda';
 
     public static function form(Form $form): Form
@@ -139,18 +139,27 @@ class ZoneAppointmentResource extends Resource
                 ]),
                 Panel::make([
                     Stack::make([
-
                         TextColumn::make('appointments')
-                            ->formatStateUsing(function ($state) {
+                            /* ->formatStateUsing(function ($state) {
                                 $clients = Client::find($state->pluck('client_id'));
                                 return $clients->pluck('name');
-                            })
+                            }) */
                             ->view('table.column.appointmentClients')
 
                     ]),
                 ])
                 ->collapsible()
-                ->visible(false),
+                ->hidden(function(?Model $record){
+                    $appointments = ZoneAppointment::find($record->id);
+                    $appointments = $appointments->appointments()->count();
+
+                    
+                    if($appointments > 0){
+                        return false;
+                    }
+                    return true;
+                    
+                }),
             ])
             ->filters([
                 //

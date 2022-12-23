@@ -13,17 +13,21 @@ use Filament\Resources\Resource;
 use Filament\Forms\Components\Card;
 use Filament\Forms\Components\Grid;
 use Filament\Forms\Components\Select;
+use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\RichEditor;
+use Filament\Forms\Components\TimePicker;
+use Filament\Tables\Filters\SelectFilter;
 use App\Filament\Resources\AppointmentResource\Pages;
 use App\Filament\Resources\AppointmentResource\RelationManagers;
-use Filament\Forms\Components\DatePicker;
-use Filament\Forms\Components\TimePicker;
+use Filament\Forms\Components\Radio;
 
 class AppointmentResource extends Resource
 {
     protected static ?string $model = Appointment::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-calendar';
+    protected static ?string $navigationIcon = 'heroicon-s-collection';
+    protected static ?string $activeNavigationIcon = 'heroicon-o-collection';
+
     protected static ?int $navigationSort = 2;
     protected static ?string $navigationGroup = 'Agenda';
 
@@ -57,6 +61,13 @@ class AppointmentResource extends Resource
                                         'orderedList',
                                     ])
                                     ->columnSpanFull(),
+                                Radio::make('status')
+                                    ->options([
+                                        'pending' => 'Pending',
+                                        'done' => 'Done'
+                                    ])
+                                    ->inline()
+                                    ->default('pending')
                             ])
                             ->columns(2)
                             ->columnSpan(2),
@@ -69,6 +80,7 @@ class AppointmentResource extends Resource
                                     ->getOptionLabelFromRecordUsing(function ($record) {
                                         return $record->salesPerson->name;
                                     })
+                                    ->disabledOn('edit')
                                     ->required(),
                                 Select::make('client_id')
                                     ->options(function (Closure $get, $record) {
@@ -79,11 +91,28 @@ class AppointmentResource extends Resource
                                         };
                                         return $salesPerson->salesPerson->clients->pluck('name', 'id');
                                     })
+                                    ->disabledOn('edit')
                                     ->required(),
                                 DatePicker::make('date')
-                                    ->displayFormat('d/m/Y'),
+                                    ->required()
+                                    ->displayFormat('d/m/Y')
+                                    ->minDate(function (Closure $get) {
+                                        $zoneAppointment = ZoneAppointment::find($get('zone_appointment_id'));
+                                        if (!$zoneAppointment) {
+                                            return false;
+                                        }
+                                        return $zoneAppointment->start_date;
+                                    })
+                                    ->maxDate(function (Closure $get) {
+                                        $zoneAppointment = ZoneAppointment::find($get('zone_appointment_id'));
+                                        if (!$zoneAppointment) {
+                                            return false;
+                                        }
+                                        return $zoneAppointment->end_date;
+                                    }),
                                 TimePicker::make('time')
-                                    ->withoutSeconds(),
+                                    ->withoutSeconds()
+                                    ->required(),
                             ])->columnSpan(1)
                     ])
             ]);
@@ -93,10 +122,12 @@ class AppointmentResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('client.name'),
+                Tables\Columns\TextColumn::make('client.name')
+                    ->searchable(),
                 Tables\Columns\TextColumn::make('date')
                     ->label('Date')
-                    ->date('d/m/Y'),
+                    ->date('d/m/Y')
+                    ->sortable(),
                 Tables\Columns\TextColumn::make('time')
                     ->label('Time')
                     ->date('H:i'),
@@ -115,7 +146,11 @@ class AppointmentResource extends Resource
                     ]),
             ])
             ->filters([
-                //
+                SelectFilter::make('status')
+                    ->options([
+                        'pending' => 'Pending',
+                        'done' => 'Done'
+                    ]),
             ])
             ->actions([
                 Tables\Actions\ViewAction::make(),

@@ -319,6 +319,7 @@ class ClientResource extends Resource
             RelationManagers\ClientCooperativeHistoriesRelationManager::class,
             RelationManagers\ContactRelationManager::class,
             RelationManagers\ProposalsRelationManager::class,
+            RelationManagers\ActionPlansRelationManager::class,
         ];
     }
 

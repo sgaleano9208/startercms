@@ -80,11 +80,6 @@ class Client extends Model
         return $this->hasMany(ClientSalesDrop::class);
     }
 
-    public function clientMonthlySales()
-    {
-        return $this->hasMany(ClientMonthlySale::class);
-    }
-
     public function appointments()
     {
         return $this->hasMany(Appointment::class);
@@ -94,4 +89,10 @@ class Client extends Model
     {
         return $this->belongsToMany(Cooperative::class);
     }
+    
+    public function actionPlans()
+    {
+        return $this->hasMany(ActionPlan::class);
+    }
+    
 }

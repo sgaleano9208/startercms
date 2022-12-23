@@ -14,9 +14,17 @@ return new class extends Migration {
     {
         Schema::create('action_plans', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->unsignedBigInteger('appointment_id');
-            $table->json('actions')->nullable();
-            $table->enum('status', ['pending', 'closed']);
+            $table->unsignedBigInteger('client_id');
+            $table->string('title');
+            $table->date('date')->nullable();
+            $table->text('note')->nullable();
+            $table->json('offer')->nullable();
+            $table->unsignedBigInteger('action_planable_id');
+            $table->string('action_planable_type');
+            $table->enum('status', ['started', 'finished'])->default('started');
+
+            $table->index('action_planable_id');
+            $table->index('action_planable_type');
 
             $table->timestamps();
         });

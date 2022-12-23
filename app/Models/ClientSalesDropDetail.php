@@ -58,4 +58,9 @@ class ClientSalesDropDetail extends Model
     {
         return $this->belongsToMany(ProductVariation::class);
     }
+
+    public function actionPlans()
+    {
+        return $this->morphMany(ActionPlan::class, 'action_planable');
+    }
 }

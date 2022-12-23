@@ -11,18 +11,33 @@ class ActionPlan extends Model
     use HasFactory;
     use Searchable;
 
-    protected $fillable = ['appointment_id', 'actions', 'status'];
+    protected $fillable = [
+        'client_id',
+        'title',
+        'date',
+        'note',
+        'offer',
+        'action_planable_id',
+        'action_planable_type',
+        'status',
+    ];
 
     protected $searchableFields = ['*'];
 
     protected $table = 'action_plans';
 
     protected $casts = [
-        'actions' => 'array',
+        'date' => 'date',
+        'offer' => 'array',
     ];
 
-    public function appointment()
+    public function client()
     {
-        return $this->belongsTo(Appointment::class);
+        return $this->belongsTo(Client::class);
+    }
+
+    public function action_planable()
+    {
+        return $this->morphTo();
     }
 }

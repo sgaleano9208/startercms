@@ -25,7 +25,7 @@ class Appointment extends Model
 
     protected $casts = [
         'date' => 'date',
-        'goals' => 'array',
+        'goals' => 'array'
     ];
 
     public function zoneAppointment()
@@ -40,6 +40,6 @@ class Appointment extends Model
 
     public function actionPlans()
     {
-        return $this->hasMany(ActionPlan::class);
+        return $this->morphMany(ActionPlan::class, 'action_planable');
     }
 }

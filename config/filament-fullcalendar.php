@@ -12,9 +12,10 @@ return [
     'locale' => config('app.locale'),
 
     'headerToolbar' => [
-        'left' => 'prev,next today',
+        'left' => '',
         'center' => 'title',
-        'right' => 'dayGridMonth,dayGridWeek,dayGridDay',
+        'right' => 'prev,next today',
+        // 'right' => 'dayGridMonth,dayGridWeek,dayGridDay',
     ],
 
     'navLinks' => false,

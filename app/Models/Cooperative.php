@@ -20,11 +20,6 @@ class Cooperative extends Model
         return $this->hasMany(ClientCooperativeHistory::class);
     }
 
-    public function clientMonthlySales()
-    {
-        return $this->hasMany(ClientMonthlySale::class);
-    }
-
     public function clients()
     {
         return $this->belongsToMany(Client::class);
